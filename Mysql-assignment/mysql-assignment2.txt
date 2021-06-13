@@ -1,0 +1,178 @@
+mysql> use employee_info;
+Database changed
+mysql> select * from employee where comm is null;
++-------+------+--------+----------+------+--------+------+
+| empid | name | deptno | job      | mrg  | salary | comm |
++-------+------+--------+----------+------+--------+------+
+|     3 | gagu |     20 | tester   | 7699 |  22000 | NULL |
+|     5 | asha |     30 | deployee | 7700 |  25000 | NULL |
++-------+------+--------+----------+------+--------+------+
+2 rows in set (0.03 sec)
+
+mysql> select * from employee where mrg is null;
+Empty set (0.00 sec)
+
+mysql> select * from employee where mrg is not null;
++-------+--------+--------+-----------+------+--------+------+
+| empid | name   | deptno | job       | mrg  | salary | comm |
++-------+--------+--------+-----------+------+--------+------+
+|     1 | nish   |     10 | developer | 7698 |  50000 | 2000 |
+|     2 | jinshi |     20 | tester    | 7699 |  45000 | 1000 |
+|     3 | gagu   |     20 | tester    | 7699 |  22000 | NULL |
+|     4 | ashui  |     20 | tester    | 7699 |  22000 |  120 |
+|     5 | asha   |     30 | deployee  | 7700 |  25000 | NULL |
++-------+--------+--------+-----------+------+--------+------+
+5 rows in set (0.00 sec)
+
+mysql> select job from employee where job="developer" and deptno=30;
+Empty set (0.00 sec)
+
+mysql> select job from employee where job="developer" and deptno=30;
++-----------+
+| job       |
++-----------+
+| developer |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select name from employee where job="developer" and deptno=30;
++--------+
+| name   |
++--------+
+| ayisha |
++--------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee where job="developer" and deptmno=30 and salary>1500;
+ERROR 1054 (42S22): Unknown column 'deptmno' in 'where clause'
+mysql> select * from employee where job="developer" and deptno=30 and salary>1500;
++-------+--------+--------+-----------+------+--------+------+
+| empid | name   | deptno | job       | mrg  | salary | comm |
++-------+--------+--------+-----------+------+--------+------+
+|     6 | ayisha |     30 | developer | 7698 |  33000 |  130 |
++-------+--------+--------+-----------+------+--------+------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee where name like "s%" or name like "a%";
++-------+--------+--------+-----------+------+--------+------+
+| empid | name   | deptno | job       | mrg  | salary | comm |
++-------+--------+--------+-----------+------+--------+------+
+|     4 | ashui  |     20 | tester    | 7699 |  22000 |  120 |
+|     5 | asha   |     30 | deployee  | 7700 |  25000 | NULL |
+|     6 | ayisha |     30 | developer | 7698 |  33000 |  130 |
++-------+--------+--------+-----------+------+--------+------+
+3 rows in set (0.00 sec)
+
+mysql> select * from employee where not in deptno(10,20);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'in deptno(10,20)' at line 1
+mysql> select * from employee where deptno not in(10,20);
++-------+--------+--------+-----------+------+--------+------+
+| empid | name   | deptno | job       | mrg  | salary | comm |
++-------+--------+--------+-----------+------+--------+------+
+|     5 | asha   |     30 | deployee  | 7700 |  25000 | NULL |
+|     6 | ayisha |     30 | developer | 7698 |  33000 |  130 |
++-------+--------+--------+-----------+------+--------+------+
+2 rows in set (0.00 sec)
+
+mysql> select * from emplooyee where deptno=10;
+ERROR 1146 (42S02): Table 'employee_info.emplooyee' doesn't exist
+mysql> select * from employee where deptno=10;
++-------+------+--------+-----------+------+--------+------+
+| empid | name | deptno | job       | mrg  | salary | comm |
++-------+------+--------+-----------+------+--------+------+
+|     1 | nish |     10 | developer | 7698 |  50000 | 2000 |
++-------+------+--------+-----------+------+--------+------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee where comm is null and job="tester";
++-------+------+--------+--------+------+--------+------+
+| empid | name | deptno | job    | mrg  | salary | comm |
++-------+------+--------+--------+------+--------+------+
+|     3 | gagu |     20 | tester | 7699 |  22000 | NULL |
++-------+------+--------+--------+------+--------+------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee where job="developer" and deptno=30 and salary>22000;
++-------+--------+--------+-----------+------+--------+------+
+| empid | name   | deptno | job       | mrg  | salary | comm |
++-------+--------+--------+-----------+------+--------+------+
+|     6 | ayisha |     30 | developer | 7698 |  33000 |  130 |
++-------+--------+--------+-----------+------+--------+------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee where name like "_i%" or name like "_a%";
++-------+--------+--------+-----------+------+--------+------+
+| empid | name   | deptno | job       | mrg  | salary | comm |
++-------+--------+--------+-----------+------+--------+------+
+|     1 | nish   |     10 | developer | 7698 |  50000 | 2000 |
+|     2 | jinshi |     20 | tester    | 7699 |  45000 | 1000 |
+|     3 | gagu   |     20 | tester    | 7699 |  22000 | NULL |
++-------+--------+--------+-----------+------+--------+------+
+3 rows in set (0.00 sec)
+
+mysql> select name,salary*12 where deptno!=30;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where deptno!=30' at line 1
+mysql> select name,salary*12 where not deptno=30;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where not deptno=30' at line 1
+mysql> select name,salary*12 as anualsalary from employee where not deptno=30;
++--------+-------------+
+| name   | anualsalary |
++--------+-------------+
+| nish   |      600000 |
+| jinshi |      540000 |
+| gagu   |      264000 |
+| ashui  |      264000 |
++--------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from employee where job like "dev%";
++-------+--------+--------+-----------+------+--------+------+
+| empid | name   | deptno | job       | mrg  | salary | comm |
++-------+--------+--------+-----------+------+--------+------+
+|     1 | nish   |     10 | developer | 7698 |  50000 | 2000 |
+|     6 | ayisha |     30 | developer | 7698 |  33000 |  130 |
++-------+--------+--------+-----------+------+--------+------+
+2 rows in set (0.00 sec)
+
+mysql> select name from employee where name like "%a%a%";
++--------+
+| name   |
++--------+
+| asha   |
+| ayisha |
++--------+
+2 rows in set (0.00 sec)
+
+mysql> select * from employee where substr(name,1,1) in ('a','e','i','o','u');
++-------+--------+--------+-----------+------+--------+------+
+| empid | name   | deptno | job       | mrg  | salary | comm |
++-------+--------+--------+-----------+------+--------+------+
+|     4 | ashui  |     20 | tester    | 7699 |  22000 |  120 |
+|     5 | asha   |     30 | deployee  | 7700 |  25000 | NULL |
+|     6 | ayisha |     30 | developer | 7698 |  33000 |  130 |
++-------+--------+--------+-----------+------+--------+------+
+3 rows in set (0.00 sec)
+
+mysql> select * from employee where to-char(doj,'mon') in ('dec','nov');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'to-char(doj,'mon') in ('dec','nov')' at line 1
+mysql> select * from employee date_format(doj,'%y')>20 and data_format(doj,'%y')<=21;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(doj,'%y')>20 and data_format(doj,'%y')<=21' at line 1
+mysql> select * from employee  where date_format(doj,'%y')>=20 and date_format(doj,'%y')<21;
++-------+--------+--------+--------+------+--------+------+------------+
+| empid | name   | deptno | job    | mrg  | salary | comm | doj        |
++-------+--------+--------+--------+------+--------+------+------------+
+|     2 | jinshi |     20 | tester | 7699 |  45000 | 1000 | 2020-10-01 |
++-------+--------+--------+--------+------+--------+------+------------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee  where date_format(doj,'%b') in ('may','oct');
++-------+--------+--------+-----------+------+--------+------+------------+
+| empid | name   | deptno | job       | mrg  | salary | comm | doj        |
++-------+--------+--------+-----------+------+--------+------+------------+
+|     1 | nish   |     10 | developer | 7698 |  50000 | 2000 | 2021-05-19 |
+|     2 | jinshi |     20 | tester    | 7699 |  45000 | 1000 | 2020-10-01 |
+|     4 | ashui  |     20 | tester    | 7699 |  22000 |  120 | 2021-05-19 |
+|     5 | asha   |     30 | deployee  | 7700 |  25000 | NULL | 2021-05-19 |
++-------+--------+--------+-----------+------+--------+------+------------+
+4 rows in set (0.00 sec)
+

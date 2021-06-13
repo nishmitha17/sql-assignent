@@ -1,0 +1,167 @@
+
+
+mysql> use employee_info;
+Database changed
+mysql> selevt * from employee;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'selevt * from employee' at line 1
+mysql> select * from employee;
++-------+--------+--------+-----------+------+--------+
+| empid | name   | deptno | job       | mrg  | salary |
++-------+--------+--------+-----------+------+--------+
+|     1 | nish   |     10 | developer | 7698 |  50000 |
+|     2 | jinshi |     20 | tester    | 7699 |  45000 |
+|     3 | gagu   |     20 | tester    | 7699 |  22000 |
+|     4 | ashui  |     20 | tester    | 7699 |  22000 |
++-------+--------+--------+-----------+------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select name,deptno from employee;
++--------+--------+
+| name   | deptno |
++--------+--------+
+| nish   |     10 |
+| jinshi |     20 |
+| gagu   |     20 |
+| ashui  |     20 |
++--------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select job from employee;
++-----------+
+| job       |
++-----------+
+| developer |
+| tester    |
+| tester    |
+| tester    |
++-----------+
+4 rows in set (0.00 sec)
+
+mysql> select empid,name from employee;
++-------+--------+
+| empid | name   |
++-------+--------+
+|     1 | nish   |
+|     2 | jinshi |
+|     3 | gagu   |
+|     4 | ashui  |
++-------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select name,job from employee;
++--------+-----------+
+| name   | job       |
++--------+-----------+
+| nish   | developer |
+| jinshi | tester    |
+| gagu   | tester    |
+| ashui  | tester    |
++--------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> select salary from employee;
++--------+
+| salary |
++--------+
+|  50000 |
+|  45000 |
+|  22000 |
+|  22000 |
++--------+
+4 rows in set (0.00 sec)
+
+mysql> select salary*12 as AnualSalary from employee;
++-------------+
+| AnualSalary |
++-------------+
+|      600000 |
+|      540000 |
+|      264000 |
+|      264000 |
++-------------+
+4 rows in set (0.00 sec)
+
+mysql> select (salary*15)/100 +salary as hikesalary from employee;
++------------+
+| hikesalary |
++------------+
+| 57500.0000 |
+| 51750.0000 |
+| 25300.0000 |
+| 25300.0000 |
++------------+
+4 rows in set (0.00 sec)
+
+mysql> select salary-((salary*19)/100) as deductionsalary from employee;
++-----------------+
+| deductionsalary |
++-----------------+
+|      40500.0000 |
+|      36450.0000 |
+|      17820.0000 |
+|      17820.0000 |
++-----------------+
+4 rows in set (0.00 sec)
+
+mysql> select salary+500 as incentivesalary from employee;
++-----------------+
+| incentivesalary |
++-----------------+
+|           50500 |
+|           45500 |
+|           22500 |
+|           22500 |
++-----------------+
+4 rows in set (0.00 sec)
+
+mysql> select distict(salary) from employee;
+ERROR 1305 (42000): FUNCTION employee_info.distict does not exist
+mysql> select distinct(salary) from employee;
++--------+
+| salary |
++--------+
+|  50000 |
+|  45000 |
+|  22000 |
++--------+
+3 rows in set (0.00 sec)
+
+mysql> select distinct(deptno) from employee;
++--------+
+| deptno |
++--------+
+|     10 |
+|     20 |
++--------+
+2 rows in set (0.00 sec)
+
+mysql> select distinct(mgr) from employee;
+ERROR 1054 (42S22): Unknown column 'mgr' in 'field list'
+mysql> select distinct(mrg) from employee;
++------+
+| mrg  |
++------+
+| 7698 |
+| 7699 |
++------+
+2 rows in set (0.00 sec)
+
+mysql> select name from employee where deptno=10;
++------+
+| name |
++------+
+| nish |
++------+
+1 row in set (0.00 sec)
+
+mysql> select name,salary from employee where salary>12000;
++--------+--------+
+| name   | salary |
++--------+--------+
+| nish   |  50000 |
+| jinshi |  45000 |
+| gagu   |  22000 |
+| ashui  |  22000 |
++--------+--------+
+4 rows in set (0.00 sec)
+

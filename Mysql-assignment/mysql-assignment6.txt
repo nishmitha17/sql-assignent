@@ -1,0 +1,104 @@
+mysql> use employee.info
+ERROR 1049 (42000): Unknown database 'employee.info'
+mysql> use employee.info;
+ERROR 1049 (42000): Unknown database 'employee.info'
+mysql> use employee_info;
+Database changed
+mysql> select location from employee where date_format(doj,'%b')=21;
+ERROR 1054 (42S22): Unknown column 'location' in 'field list'
+mysql> select loc from employee where date_format(doj,'%b')=21;
+Empty set (0.00 sec)
+
+mysql>  select * from employee where date_format(doj,'%y')=20;
++-------+--------+--------+--------+------+--------+------+------------+-----------+
+| empid | name   | deptno | job    | mrg  | salary | comm | doj        | loc       |
++-------+--------+--------+--------+------+--------+------+------------+-----------+
+|     2 | jinshi |     20 | tester | 7699 |  45000 | 1000 | 2020-10-01 | bangalore |
++-------+--------+--------+--------+------+--------+------+------------+-----------+
+1 row in set (0.00 sec)
+
+mysql> select *from employee group by deptno in (select deptno from employee group by deptnohaving min(salary)<avg(salary)); 
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'min(salary)<avg(salary))' at line 1
+mysql> select * from employee group by deptno in (select deptno from employee group by deptno having min(salary)<avg(salary)); 
++-------+------+--------+-----------+------+--------+------+------------+-----------+
+| empid | name | deptno | job       | mrg  | salary | comm | doj        | loc       |
++-------+------+--------+-----------+------+--------+------+------------+-----------+
+|     1 | nish |     10 | developer | 7698 |  50000 | 2000 | 2021-05-19 | mangalore |
++-------+------+--------+-----------+------+--------+------+------------+-----------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee where loc in (select loc from employee where loc like "%i%");
++-------+--------+--------+-----------+------+--------+------+------------+--------+
+| empid | name   | deptno | job       | mrg  | salary | comm | doj        | loc    |
++-------+--------+--------+-----------+------+--------+------+------------+--------+
+|     5 | asha   |     30 | deployee  | 7700 |  25000 | NULL | 2021-05-19 | chenai |
+|     6 | ayisha |     30 | developer | 7698 |  33000 |  130 | 2021-06-01 | mubai  |
+|     7 | raj    |     10 | developer | 7698 |  56000 | 2000 | 2019-01-01 | mubai  |
++-------+--------+--------+-----------+------+--------+------+------------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select name,deptno,location from employee 
+    -> where mrg in (select mrg from employee where mrg=7698);
+ERROR 1054 (42S22): Unknown column 'location' in 'field list'
+mysql> where mrg in (select mrg from employee where mrg=7698);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where mrg in (select mrg from employee where mrg=7698)' at line 1
+mysql> select name,deptno,loc from employee where mrg in (select mrg from employee where mrg=7698);
++--------+--------+-----------+
+| name   | deptno | loc       |
++--------+--------+-----------+
+| nish   |     10 | mangalore |
+| ayisha |     30 | mubai     |
+| raj    |     10 | mubai     |
++--------+--------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> select avg(salary) from employee where deptno=10;
++-------------+
+| avg(salary) |
++-------------+
+|  53000.0000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select loc from employee where comm is not null;
++-----------+
+| loc       |
++-----------+
+| mangalore |
+| bangalore |
+| bangalore |
+| mubai     |
+| mubai     |
++-----------+
+5 rows in set (0.00 sec)
+
+mysql> select count(*) from employee where job in (select job from employee where job='tester') and loc in ('bangalore','mangalore');
++----------+
+| count(*) |
++----------+
+|        3 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select max(salary) from employee 
+    -> group by deptno;
++-------------+
+| max(salary) |
++-------------+
+|       56000 |
+|       45000 |
+|       33000 |
++-------------+
+3 rows in set (0.00 sec)
+
+mysql> select name from employee where deptno=20 and salary >(select salary from employee where salary not deptno=20);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'deptno=20)' at line 1
+mysql>  select * from employee   group by salary  having salary in (select salary from employee where salary in (select salary from employee where deptno!=20)) and deptno=10;
++-------+------+--------+-----------+------+--------+------+------------+-----------+
+| empid | name | deptno | job       | mrg  | salary | comm | doj        | loc       |
++-------+------+--------+-----------+------+--------+------+------------+-----------+
+|     1 | nish |     10 | developer | 7698 |  50000 | 2000 | 2021-05-19 | mangalore |
+|     7 | raj  |     10 | developer | 7698 |  56000 | 2000 | 2019-01-01 | mubai     |
++-------+------+--------+-----------+------+--------+------+------------+-----------+
+2 rows in set (0.00 sec)
+

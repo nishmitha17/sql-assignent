@@ -1,0 +1,61 @@
+mysql> select * from employee 
+    -> group by employee 
+    -> having total(salary)=(select salary from employee 
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+mysql> select * from employee where doj in(select doj from employee group by dojhaving count(*)>2);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'count(*)>2)' at line 1
+mysql> select * from employee where doj in (select doj from employee group by doj having count(*)>2);
+ERROR 1046 (3D000): No database selected
+mysql> use employee_info;
+Database changed
+mysql> select * from employee where doj in (select doj from employee group by doj having count(*)>2);
++-------+-------+--------+-----------+------+--------+------+------------+-----------+
+| empid | name  | deptno | job       | mrg  | salary | comm | doj        | loc       |
++-------+-------+--------+-----------+------+--------+------+------------+-----------+
+|     1 | nish  |     10 | developer | 7698 |  50000 | 2000 | 2021-05-19 | mangalore |
+|     4 | ashui |     20 | tester    | 7699 |  22000 |  120 | 2021-05-19 | bangalore |
+|     5 | asha  |     30 | deployee  | 7700 |  25000 | NULL | 2021-05-19 | chenai    |
++-------+-------+--------+-----------+------+--------+------+------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> select deptno where sal in(select salary from employee group by deptno having avg(salary) between 12000 and 18000);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where sal in(select salary from employee group by deptno having avg(salary) betw' at line 1
+mysql> select * from employee where salary in (select salary from employee group by deptno having avg(salary) between 20000 and 50000);
++-------+--------+--------+----------+------+--------+------+------------+-----------+
+| empid | name   | deptno | job      | mrg  | salary | comm | doj        | loc       |
++-------+--------+--------+----------+------+--------+------+------------+-----------+
+|     2 | jinshi |     20 | tester   | 7699 |  45000 | 1000 | 2020-10-01 | bangalore |
+|     5 | asha   |     30 | deployee | 7700 |  25000 | NULL | 2021-05-19 | chenai    |
++-------+--------+--------+----------+------+--------+------+------------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> select deptno,count(*)as nooftester from employee where job in (select job from employee group by deptno);
++--------+------------+
+| deptno | nooftester |
++--------+------------+
+|     10 |          7 |
++--------+------------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee where salary in (select salary from employee  group by salary  having count(salary) >1);
++-------+-------+--------+--------+------+--------+------+------------+-----------+
+| empid | name  | deptno | job    | mrg  | salary | comm | doj        | loc       |
++-------+-------+--------+--------+------+--------+------+------------+-----------+
+|     3 | gagu  |     20 | tester | 7699 |  22000 | NULL | 2021-06-05 | mangalore |
+|     4 | ashui |     20 | tester | 7699 |  22000 |  120 | 2021-05-19 | bangalore |
++-------+-------+--------+--------+------+--------+------+------------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> select comm from employee where comm in(select comm from employee group by deptno);
++------+
+| comm |
++------+
+| 2000 |
+| 1000 |
+|  120 |
+|  130 |
+| 2000 |
++------+
+5 rows in set (0.00 sec)
+

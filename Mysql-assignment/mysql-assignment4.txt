@@ -1,0 +1,142 @@
+mysql> select * from employee where job like "s%";
+ERROR 1046 (3D000): No database selected
+mysql> use employee_info;
+Database changed
+mysql> select * from employee where job like "t%";
++-------+--------+--------+--------+------+--------+------+------------+
+| empid | name   | deptno | job    | mrg  | salary | comm | doj        |
++-------+--------+--------+--------+------+--------+------+------------+
+|     2 | jinshi |     20 | tester | 7699 |  45000 | 1000 | 2020-10-01 |
+|     3 | gagu   |     20 | tester | 7699 |  22000 | NULL | 2021-06-05 |
+|     4 | ashui  |     20 | tester | 7699 |  22000 |  120 | 2021-05-19 |
++-------+--------+--------+--------+------+--------+------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select name from employee where sal=(select max(salary) from employee where deptno=10);
+ERROR 1054 (42S22): Unknown column 'sal' in 'where clause'
+mysql> select name from employee where salary=(select max(salary) from employee where deptno=10);
++------+
+| name |
++------+
+| raj  |
++------+
+1 row in set (0.00 sec)
+
+mysql> select job from employee where comm=(select max(comm) from employee);
++-----------+
+| job       |
++-----------+
+| developer |
+| developer |
++-----------+
+2 rows in set (0.00 sec)
+
+mysql> select name,job from employee where comm=(select max(comm) from employee);
++------+-----------+
+| name | job       |
++------+-----------+
+| nish | developer |
+| raj  | developer |
++------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> select * from employee where deptno=(select deptno from employee where name='jinshi');
++-------+--------+--------+--------+------+--------+------+------------+
+| empid | name   | deptno | job    | mrg  | salary | comm | doj        |
++-------+--------+--------+--------+------+--------+------+------------+
+|     2 | jinshi |     20 | tester | 7699 |  45000 | 1000 | 2020-10-01 |
+|     3 | gagu   |     20 | tester | 7699 |  22000 | NULL | 2021-06-05 |
+|     4 | ashui  |     20 | tester | 7699 |  22000 |  120 | 2021-05-19 |
++-------+--------+--------+--------+------+--------+------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select name from employee where job=(select job from employee where job like "__v%";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> select name from employee where job=(select job from employee where job like "__v%");
+ERROR 1242 (21000): Subquery returns more than 1 row
+mysql> select name from employee where job in (select job from employee where job like "__v%");
++--------+
+| name   |
++--------+
+| nish   |
+| ayisha |
+| raj    |
++--------+
+3 rows in set (0.00 sec)
+
+mysql> select name from employee where salary>(select salary from employee where name="ashui");
++--------+
+| name   |
++--------+
+| nish   |
+| jinshi |
+| asha   |
+| ayisha |
+| raj    |
++--------+
+5 rows in set (0.00 sec)
+
+mysql> select * from employee where deptno not in (select deptno from employee where name='nish');
++-------+--------+--------+-----------+------+--------+------+------------+
+| empid | name   | deptno | job       | mrg  | salary | comm | doj        |
++-------+--------+--------+-----------+------+--------+------+------------+
+|     2 | jinshi |     20 | tester    | 7699 |  45000 | 1000 | 2020-10-01 |
+|     3 | gagu   |     20 | tester    | 7699 |  22000 | NULL | 2021-06-05 |
+|     4 | ashui  |     20 | tester    | 7699 |  22000 |  120 | 2021-05-19 |
+|     5 | asha   |     30 | deployee  | 7700 |  25000 | NULL | 2021-05-19 |
+|     6 | ayisha |     30 | developer | 7698 |  33000 |  130 | 2021-06-01 |
++-------+--------+--------+-----------+------+--------+------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from employee where deptno not in (select deptno from employee where name='nish') and salary>(select 
+    -> salary from employee where name='asha');
++-------+--------+--------+-----------+------+--------+------+------------+
+| empid | name   | deptno | job       | mrg  | salary | comm | doj        |
++-------+--------+--------+-----------+------+--------+------+------------+
+|     2 | jinshi |     20 | tester    | 7699 |  45000 | 1000 | 2020-10-01 |
+|     6 | ayisha |     30 | developer | 7698 |  33000 |  130 | 2021-06-01 |
++-------+--------+--------+-----------+------+--------+------+------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from employee where salary=(select min(salary) from employee where sal>22000);
+ERROR 1054 (42S22): Unknown column 'sal' in 'where clause'
+mysql> select * from employee where salary=(select min(salary) from employee where salary>22000);
++-------+------+--------+----------+------+--------+------+------------+--------+
+| empid | name | deptno | job      | mrg  | salary | comm | doj        | loc    |
++-------+------+--------+----------+------+--------+------+------------+--------+
+|     5 | asha |     30 | deployee | 7700 |  25000 | NULL | 2021-05-19 | chenai |
++-------+------+--------+----------+------+--------+------+------------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee where location=(select location from employee where name='nish');
+ERROR 1054 (42S22): Unknown column 'location' in 'where clause'
+mysql> select * from employee where loc=(select loc from employee where name='nish');
++-------+------+--------+-----------+------+--------+------+------------+-----------+
+| empid | name | deptno | job       | mrg  | salary | comm | doj        | loc       |
++-------+------+--------+-----------+------+--------+------+------------+-----------+
+|     1 | nish |     10 | developer | 7698 |  50000 | 2000 | 2021-05-19 | mangalore |
+|     3 | gagu |     20 | tester    | 7699 |  22000 | NULL | 2021-06-05 | mangalore |
++-------+------+--------+-----------+------+--------+------+------------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> select * from employee where loc=(select loc from employee where name='nish');
++-------+------+--------+-----------+------+--------+------+------------+-----------+
+| empid | name | deptno | job       | mrg  | salary | comm | doj        | loc       |
++-------+------+--------+-----------+------+--------+------+------------+-----------+
+|     1 | nish |     10 | developer | 7698 |  50000 | 2000 | 2021-05-19 | mangalore |
+|     3 | gagu |     20 | tester    | 7699 |  22000 | NULL | 2021-06-05 | mangalore |
++-------+------+--------+-----------+------+--------+------+------------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> select * from employee where loc in (select loc from employee where loc='mangalore' and comm=null);
+Empty set (0.00 sec)
+
+mysql> select * from employee where loc in ( select loc from employee where loc='mangalore' and comm is null);
++-------+------+--------+-----------+------+--------+------+------------+-----------+
+| empid | name | deptno | job       | mrg  | salary | comm | doj        | loc       |
++-------+------+--------+-----------+------+--------+------+------------+-----------+
+|     1 | nish |     10 | developer | 7698 |  50000 | 2000 | 2021-05-19 | mangalore |
+|     3 | gagu |     20 | tester    | 7699 |  22000 | NULL | 2021-06-05 | mangalore |
++-------+------+--------+-----------+------+--------+------+------------+-----------+
+2 rows in set (0.00 sec)
+

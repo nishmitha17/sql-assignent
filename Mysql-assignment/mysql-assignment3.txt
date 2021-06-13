@@ -1,0 +1,124 @@
+mysql> tee g:\mysql-assignment3.txt
+mysql> select * from employee where length(name)=4;
++-------+------+--------+-----------+------+--------+------+------------+
+| empid | name | deptno | job       | mrg  | salary | comm | doj        |
++-------+------+--------+-----------+------+--------+------+------------+
+|     1 | nish |     10 | developer | 7698 |  50000 | 2000 | 2021-05-19 |
+|     3 | gagu |     20 | tester    | 7699 |  22000 | NULL | 2021-06-05 |
+|     5 | asha |     30 | deployee  | 7700 |  25000 | NULL | 2021-05-19 |
++-------+------+--------+-----------+------+--------+------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select length('developer')-length(replace('developer','e','')) as occurance from dual;
++-----------+
+| occurance |
++-----------+
+|         3 |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee where substr(name,3,1)='sha';
+Empty set (0.00 sec)
+
+mysql> select * from employee where substr(name,1,3)='sha';
+Empty set (0.00 sec)
+
+mysql> select * from employee where substr(name,-1,3)='sha';
+Empty set (0.00 sec)
+
+mysql> select * from employee where substr(name,-3,3)='sha';
++-------+--------+--------+-----------+------+--------+------+------------+
+| empid | name   | deptno | job       | mrg  | salary | comm | doj        |
++-------+--------+--------+-----------+------+--------+------+------------+
+|     5 | asha   |     30 | deployee  | 7700 |  25000 | NULL | 2021-05-19 |
+|     6 | ayisha |     30 | developer | 7698 |  33000 |  130 | 2021-06-01 |
++-------+--------+--------+-----------+------+--------+------+------------+
+2 rows in set (0.00 sec)
+
+mysql> select name from employee where (length(name)-length(replace(name,'n','')))=1;
++--------+
+| name   |
++--------+
+| nish   |
+| jinshi |
++--------+
+2 rows in set (0.00 sec)
+
+mysql> select job from instr(job,'o',1)!=0;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(job,'o',1)!=0' at line 1
+mysql> select job from employee where instr(job,'o',1)!=0;
+ERROR 1582 (42000): Incorrect parameter count in the call to native function 'instr'
+mysql> select job from employee where instr(job,'e')!=0;
++-----------+
+| job       |
++-----------+
+| developer |
+| tester    |
+| tester    |
+| tester    |
+| deployee  |
+| developer |
+| developer |
++-----------+
+7 rows in set (0.00 sec)
+
+mysql> select job from employee where instr(job,'o')!=0;
++-----------+
+| job       |
++-----------+
+| developer |
+| deployee  |
+| developer |
+| developer |
++-----------+
+4 rows in set (0.00 sec)
+
+mysql> select length('hellll')-length(replace('hellll','l','')) from dual;
++---------------------------------------------------+
+| length('hellll')-length(replace('hellll','l','')) |
++---------------------------------------------------+
+|                                                 4 |
++---------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select length('hellll')-length(replace('hellll','l','')) as lengthofL from dual;
++-----------+
+| lengthofL |
++-----------+
+|         4 |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select job from employee where instr(job,'tes');
++--------+
+| job    |
++--------+
+| tester |
+| tester |
+| tester |
++--------+
+3 rows in set (0.00 sec)
+
+mysql> select * from employee where substr(job,1,3)="dev";
++-------+--------+--------+-----------+------+--------+------+------------+
+| empid | name   | deptno | job       | mrg  | salary | comm | doj        |
++-------+--------+--------+-----------+------+--------+------+------------+
+|     1 | nish   |     10 | developer | 7698 |  50000 | 2000 | 2021-05-19 |
+|     6 | ayisha |     30 | developer | 7698 |  33000 |  130 | 2021-06-01 |
+|     7 | raj    |     10 | developer | 7698 |  56000 | 2000 | 2019-01-01 |
++-------+--------+--------+-----------+------+--------+------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from employee where substr(job,3,-3)="ter";
+Empty set (0.00 sec)
+
+mysql> select * from employee where substr(job,-3,3)="ter";
++-------+--------+--------+--------+------+--------+------+------------+
+| empid | name   | deptno | job    | mrg  | salary | comm | doj        |
++-------+--------+--------+--------+------+--------+------+------------+
+|     2 | jinshi |     20 | tester | 7699 |  45000 | 1000 | 2020-10-01 |
+|     3 | gagu   |     20 | tester | 7699 |  22000 | NULL | 2021-06-05 |
+|     4 | ashui  |     20 | tester | 7699 |  22000 |  120 | 2021-05-19 |
++-------+--------+--------+--------+------+--------+------+------------+
+3 rows in set (0.00 sec)
+
